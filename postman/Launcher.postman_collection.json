@@ -1,0 +1,67 @@
+{
+	"info": {
+		"_postman_id": "01e8e49c-3929-432e-8a4f-b7c8968c63a6",
+		"name": "Launcher",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Worker",
+			"item": [
+				{
+					"name": "Apply",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ServerAddress}}/apply",
+							"host": [
+								"{{ServerAddress}}"
+							],
+							"path": [
+								"apply"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Destory",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\" : \"153\",\r\n    \"region\" : \"ap-northeast-2\",\r\n    \"infraType\" : \"1\",\r\n    \"awsAccessKey\" : \"AKIA4BPI76PSCQY7SSUD\",\r\n    \"awsSecretKey\" : \"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\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ServerAddress}}/launcher/destroy",
+							"host": [
+								"{{ServerAddress}}"
+							],
+							"path": [
+								"launcher",
+								"destroy"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
