@@ -1,0 +1,68 @@
+@startuml
+"SL_Front" -> "SL_Backend" :  1. 프로잭트 생성요청
+"SL_Front" <-- "SL_Backend" : 2. 프로잭트 생성요청 응답
+"SL_Front" -> "SL_Backend" : 3. 사용자 임의 선택값 저장 요청
+"SL_Front" <-- "SL_Backend" : 4. 사용자 임의 선택값 저장 요청 응답
+"SL_Front" -> "SL_Backend" : 5. 서비스 런처 생성 요청
+
+"SL_Backend" -> "SL_Worker":    6. 서비스 런처 생성 요청
+"SL_Backend" <-- "SL_Worker":   7. 서비스 런처 생성 응답
+
+group init_op
+note over "SL_Worker" 
+8. 디렉토리 구성
+
+8-1. Terraform 디렉토리 구성.
+8-2. ansible 디렉터리 구성.
+
+9. template clone
+ 
+9-1. terraform templete clone
+     terraform init library 포함
+9-2.  ansible templete clone
+
+end note
+end
+
+"SL_Worker" -> "MongoDB" : 10. 런처 생성 init 상태 저장
+"SL_Worker" --> "SL_Backend": 11. 서비스 런처 생성 init 상태 전달
+"SL_Backend" --> "SL_Front" : 12. 서비스 런처 생성 init 상태 전달
+"SL_Worker" -> "Terraform" : 13. Terraform apply 
+"Terraform" -> "CSP 계정": 14. Terraform Provision
+"Terraform" <-- "CSP 계정": 15. infra 생성 완료
+"Terraform" --> "SL_Worker" : 16. Terraform 상태값 전달
+
+group terraform_check_result
+note over "SL_Worker" 
+  17. Terraform 상태값 확인
+      echo $?
+end note
+end
+
+"SL_Worker" --> "SL_Backend": 18. 서비스 런처 생성 tf_end 상태 전달
+"SL_Backend" --> "SL_Front": 19. 서비스 런처 생성 tf_end 상태 전달
+
+"SL_Worker" -> "Ansible" : 20. Ansible 실행
+"Ansible" -> "CSP 계정": 21. ansible playbook 실행
+"Ansible" <-- "CSP 계정": 22. ansible playbook 실행 결과
+"Ansible" --> "SL_Worker": 23. ansible playbook 실행 결과
+
+group ansible_check_result
+note over "SL_Worker" 
+  24. ansible_check_result 상태값 확인
+end note
+end
+
+"SL_Worker" --> "SL_Backend": 26. 서비스 런처 생성 ansible_end 상태 전달
+"SL_Backend" --> "SL_Front": 27. 서비스 런처 생성 ansible_end 상태 전달
+
+group launcher_check_result
+note over "SL_Worker" 
+  28.런처 생성 완료
+end note
+end
+
+"SL_Worker" -> "MongoDB": 29. 런처 생성 완료 상태저장
+"SL_Worker" --> "SL_Backend": 30. 서비스 런처 생성 완료
+"SL_Backend" --> "SL_Front": 31. 서비스 런처 생성 완료
+@enduml 
