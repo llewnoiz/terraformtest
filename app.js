@@ -3,11 +3,12 @@ const path = require('path');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+const morgan = require('morgan');
 const hpp = require('hpp');
 const helmet = require('helmet');
 // const { sequelize } = require('./entities');
 // const mongoose = require('mongoose');
+const logger = require('./utils/log');
 const launcherRouter = require('./routes/launcher.router');
 
 dotenv.config();
@@ -27,8 +28,8 @@ app.set('port', process.env.PORT || 8110);
 //     .connect(MONGO_HOST, { useNewUrlParser: true, useUnifiedTopology: true })
 //     .then(() => console.log('Successfully connected to mongodb'))
 //     .catch(e => console.error(e));
-
-app.use(logger('dev'));
+app.use(express.static(__dirname +'/template'));
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -44,10 +45,12 @@ app.use((req, res, next) => {
     const error =  new Error();
     error.status = 404;
     error.message = "router not found";
+    logger.error(error);
     next(error);
 });
 
 app.use((err, req, res, next) => {
+    logger.error(error);
     res.status(err.status || 500).send({ "message" : err?.message , "code" : err?.status});
 });
 
